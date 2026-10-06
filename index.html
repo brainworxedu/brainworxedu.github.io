@@ -41,9 +41,12 @@
           <strong>DAILY VISITS</strong>
           <span>VISITOR SIGNAL • TODAY</span>
         </div>
-        <div class="daily-visits-badge-wrap">
+        <div class="daily-visits-badge-wrap" aria-label="Unique daily visitors">
           <div class="crt-frame-corners" aria-hidden="true"></div>
-          <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fbrainworxgames.github.io%2F&label=DAILY%20VISITS&icon=people-fill&color=%23ff4fa9&message=&style=for-the-badge&tz=Europe%2FLondon" alt="Daily Visits counter" loading="eager">
+          <span class="daily-visits-count-shell" aria-hidden="true">
+            <img id="dailyVisitsBadge" src="__brainworx_daily_visits.svg" alt="" loading="eager" decoding="async">
+          </span>
+          <span class="daily-visits-count-fallback" id="dailyVisitsFallback">0</span>
         </div>
       </div>
       <div class="daily-visits-footer"><span>SYS: ONLINE</span><span>BWX-DAILY-01</span></div>
@@ -51,6 +54,35 @@
     <div class="home-links"><a href="classes.html">Browse all g@m3s →</a></div>
   </section>
 </main>
+<script>
+  (function(){
+    try {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./daily-visits-sw.js', {scope: './'}).catch(function(){});
+      }
+
+      var today = new Date().toISOString().slice(0,10);
+      var key = 'bwx-daily-visit-device-day';
+      var seen = localStorage.getItem(key) === today;
+      if (!seen) localStorage.setItem(key, today);
+
+      // The service worker only calls the global counter once per browser/profile per day.
+      // The badge is served locally on repeat loads so refreshing the page does not add another hit.
+      var badge = document.getElementById('dailyVisitsBadge');
+      var fallback = document.getElementById('dailyVisitsFallback');
+      if (!badge) return;
+
+      badge.addEventListener('error', function(){
+        if (fallback) fallback.textContent = '—';
+      });
+
+      // Hide the old fallback number once the badge has loaded.
+      badge.addEventListener('load', function(){
+        if (fallback) fallback.style.display = 'none';
+      });
+    } catch (e) {}
+  })();
+</script>
 <script src="site.js"></script>
 </body>
 </html>
