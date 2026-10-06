@@ -39,6 +39,12 @@ const games=[
  {name:'Tunnel Rush',file:'tunnel-rush.html',img:'https://play-lh.googleusercontent.com/FokWq1FwEEzo2fI7T4r0kY9pOU1Wjyq0HuCeMZ5GJlQ11cADDml-JE46R8jULudqIBZtP9eNuba4eo54sQBh=w526-h296-rw'},
  {name:'Getaway Shootout',file:'getaway-shootout.html',img:'https://imgs.crazygames.com/getaway-shootout_16x9/20241230044730/getaway-shootout_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop'},
  {name:'Celeste',file:'celeste.html',img:'https://img.itch.zone/aW1nLzEwMjQyNTgucG5n/original/kDcm5O.png'},
+ {name:'Pikuniku',file:'pikuniku.html',img:'https://store-images.s-microsoft.com/image/apps.7703.14041044108785223.82419c4d-359a-436a-b07d-12cf7137d8fc.2cb971f9-2b51-4824-b789-52e49f050b4d'},
+ {name:'Trees Hate You',file:'trees-hate-you.html',img:'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4171850/e91e9662ad67f01a965b1ea764629bd63cba7c32/capsule_616x353.jpg?t=1787891955'},
+ {name:'The Binding of Isaac: Wrath of the Lamb',file:'binding-of-isaac.html',img:'https://fnaffree.io/data/image/game/the-binding-of-isaac-wrath-of-the-lamb/the-binding-of-isaac-wrath-of-the-lamb.png'},
+ {name:'8 Ball Pool',file:'8-ball-pool.html',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoHWRRIwQP2Rsa9A0S2rk946Qc4krjt0ul5LaZ3poYyXDpJcH-eRxBLvk&s=10'},
+ {name:'60 Seconds',file:'60-seconds.html',img:'https://upload.wikimedia.org/wikipedia/commons/6/6b/60_Seconds%21.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
+ {name:'Trombone Champ',file:'trombone-champ.html',img:'https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_TromboneChamp.jpg'},
 ];
 window.BW_GAMES=games;
 

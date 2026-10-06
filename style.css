@@ -162,3 +162,11 @@ body{transition:background-color .35s ease,color .35s ease}
 .random-card .game-thumb-img{opacity:.72}
 .browser-address{flex:0 0 170px}
 @media(max-width:760px){.browser-address{display:none}.browser-nav{width:calc(100vw - 20px);height:62px}.browser-nav-wrap{top:8px}.browser-tab{height:42px}}
+
+/* Global daily visits card */
+.daily-visits-card{width:min(720px,100%);margin:16px auto 0;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,45,157,.055)),rgba(12,10,16,.78);box-shadow:0 16px 45px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.09);backdrop-filter:blur(16px);position:relative;overflow:hidden}
+.daily-visits-card::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.10) 48%,transparent 76%);transform:translateX(-120%);animation:dailySheen 6.5s ease-in-out infinite;pointer-events:none}
+.daily-visits-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px;position:relative;z-index:1}.daily-visits-eyebrow{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--theme-accent-soft);font-weight:900}.daily-visits-copy strong{font-size:18px;letter-spacing:-.03em}.daily-visits-copy span:last-child{font-size:11px;color:var(--theme-muted)}
+.daily-visits-badge-wrap{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-width:150px}.daily-visits-badge-wrap img{display:block;max-width:100%;height:34px;filter:drop-shadow(0 8px 22px color-mix(in srgb,var(--theme-accent) 22%,transparent));border-radius:10px}
+@keyframes dailySheen{0%,54%{transform:translateX(-120%);opacity:0}65%{opacity:1}88%,100%{transform:translateX(120%);opacity:0}}
+@media(max-width:600px){.daily-visits-card{flex-direction:column;align-items:flex-start}.daily-visits-badge-wrap{width:100%;justify-content:flex-start}}
