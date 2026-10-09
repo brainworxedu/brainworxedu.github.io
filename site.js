@@ -45,6 +45,11 @@ const games=[
  {name:'8 Ball Pool',file:'8-ball-pool.html',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoHWRRIwQP2Rsa9A0S2rk946Qc4krjt0ul5LaZ3poYyXDpJcH-eRxBLvk&s=10'},
  {name:'60 Seconds',file:'60-seconds.html',img:'https://upload.wikimedia.org/wikipedia/commons/6/6b/60_Seconds%21.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
  {name:'Trombone Champ',file:'trombone-champ.html',img:'https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_TromboneChamp.jpg'},
+ {name:'NoomiClone',file:'noomi-clone.html',img:'https://play-lh.googleusercontent.com/VtZsSr-cpNpy5wQRxFSv5B7zQgx4MutD-vCEEZSshZh3glxRK3kpf1VHuGNkl1E0bEQ=w3840-h2160-rw'},
+ {name:'Crashout Crew',file:'crashout-crew.html',img:''},
+ {name:'People Playground',file:'people-playground.html',img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1118200/capsule_616x353.jpg?t=1776802758'},
+ {name:'Skate 3',file:'skate-3.html',img:'https://media.contentapi.ea.com/content/dam/gin/images/2017/01/skate-3-key-art.jpg.adapt.crop191x100.628p.jpg'},
+ {name:'Gamble With Your Friends',file:'gamble-with-your-friends.html',img:'https://sm.ign.com/ign_za/news/g/gamble-wit/gamble-with-your-friends-dev-celebrates-1-million-sales-says_keek.jpg'},
 ];
 window.BW_GAMES=games;
 
@@ -149,6 +154,41 @@ function setupSettings(){
   save.addEventListener('click',()=>{localStorage.setItem('bw_title',title.value.trim()||'BrainWorks');const file=icon&&icon.files&&icon.files[0];if(file){const r=new FileReader();r.onload=()=>{localStorage.setItem('bw_icon',r.result);applySettings();status.textContent='Saved.'};r.readAsDataURL(file);}else{applySettings();status.textContent='Saved.';}});
   if(reset)reset.addEventListener('click',()=>{localStorage.removeItem('bw_title');localStorage.removeItem('bw_icon');title.value='BrainWorks';if(icon)icon.value='';applySettings();document.querySelectorAll('[data-tab-icon]').forEach(btn=>btn.classList.remove('selected'));status.textContent='Reset.';});
 }
+
+function setupLiveStats(){
+  // Remove the previous badge-counter service worker and its cache, if a visitor has it installed.
+  try{
+    if('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(regs=>regs.filter(reg=>reg.active&&reg.active.scriptURL.endsWith('/daily-visits-sw.js')).forEach(reg=>reg.unregister())).catch(()=>{});
+    if('caches' in window) caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('bwx-daily-counter-')).map(key=>caches.delete(key)))).catch(()=>{});
+  }catch(e){}
+  const endpoint=(window.BRAINWORX_STATS_ENDPOINT||'').trim();
+  const activeEl=document.getElementById('bwActiveUsers'), dailyEl=document.getElementById('bwDailyVisitors'), statusEl=document.getElementById('bwStatsStatus');
+  if(!endpoint){ if(statusEl) statusEl.textContent='SETUP NEEDED'; return; }
+  let clientId;
+  try {
+    clientId=localStorage.getItem('bwx-visitor-id');
+    if(!clientId){ clientId=(crypto.randomUUID?crypto.randomUUID():('bwx-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2))); localStorage.setItem('bwx-visitor-id',clientId); }
+  } catch(e) { clientId='bwx-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2); }
+  let busy=false;
+  const pulse=async()=>{
+    if(busy || document.visibilityState==='prerender') return;
+    busy=true;
+    try{
+      const response=await fetch(endpoint,{method:'POST',mode:'cors',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify({clientId}),keepalive:true});
+      if(!response.ok) throw new Error('Stats request failed');
+      const data=await response.json();
+      if(activeEl) activeEl.textContent=String(Number.isFinite(data.activeUsers)?data.activeUsers:'—');
+      if(dailyEl) dailyEl.textContent=String(Number.isFinite(data.dailyVisitors)?data.dailyVisitors:'—');
+      if(statusEl) statusEl.textContent='LIVE';
+    }catch(e){ if(statusEl) statusEl.textContent='RECONNECTING'; }
+    finally{busy=false;}
+  };
+  pulse();
+  const timer=setInterval(pulse,45000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')pulse();});
+  addEventListener('pagehide',()=>clearInterval(timer),{once:true});
+}
+
 function setupBrowserNav(){
   let nav=document.querySelector('.browser-nav-wrap');
   const isPlay=location.pathname.includes('/play/');
@@ -173,5 +213,5 @@ function setupBrowserNav(){
 }
 
 function cursor(){if(matchMedia('(pointer:fine)').matches){document.body.classList.add('no-cursor');const dot=document.createElement('div'),ring=document.createElement('div');dot.className='cursor-dot';ring.className='cursor-ring';document.body.append(dot,ring);let x=-100,y=-100,rx=-100,ry=-100;addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;dot.style.left=x+'px';dot.style.top=y+'px'});function loop(){rx+=(x-rx)*.18;ry+=(y-ry)*.18;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)}loop();addEventListener('mousedown',()=>{ring.classList.remove('click');void ring.offsetWidth;ring.classList.add('click')});}}
-applyTheme(localStorage.getItem('bw_theme')||'pink');applySettings();fallingBalls();setupThemes();setupBrowserNav();setupGames();setupHome();setupSettings();cursor();
+applyTheme(localStorage.getItem('bw_theme')||'pink');applySettings();fallingBalls();setupThemes();setupBrowserNav();setupGames();setupHome();setupSettings();setupLiveStats();cursor();
 })();
