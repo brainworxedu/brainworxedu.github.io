@@ -1,6 +1,8 @@
 (function(){
 const base = location.pathname.includes('/play/') ? '../' : '';
 const games=[
+ {name:'Skate 3',file:'skate-3.html',img:'https://media.contentapi.ea.com/content/dam/gin/images/2017/01/skate-3-key-art.jpg.adapt.crop191x100.628p.jpg'},
+ {name:'Gamble With Your Friends',file:'gamble-with-your-friends.html',img:'https://sm.ign.com/ign_za/news/g/gamble-wit/gamble-with-your-friends-dev-celebrates-1-million-sales-says_keek.jpg'},
  {name:'Subway Surfers',file:'subway-surfers.html',img:'https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=314,height=314,fit=cover,f=auto/1c920b9279c2bedec567c1b58129ae8f/subway-surfers-logo.png'},
  {name:'Table Tennis World Tour',file:'table-tennis-world-tour.html',img:'https://imgs.crazygames.com/table-tennis-world-tour_16x9/20230908041108/table-tennis-world-tour_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop'},
  {name:'Rooftop Snipers',file:'rooftop-snipers.html',img:'https://imgs.crazygames.com/rooftop-snipers_16x9/20250108040440/rooftop-snipers_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop'},
@@ -46,10 +48,8 @@ const games=[
  {name:'60 Seconds',file:'60-seconds.html',img:'https://upload.wikimedia.org/wikipedia/commons/6/6b/60_Seconds%21.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
  {name:'Trombone Champ',file:'trombone-champ.html',img:'https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_TromboneChamp.jpg'},
  {name:'NoomiClone',file:'noomi-clone.html',img:'https://play-lh.googleusercontent.com/VtZsSr-cpNpy5wQRxFSv5B7zQgx4MutD-vCEEZSshZh3glxRK3kpf1VHuGNkl1E0bEQ=w3840-h2160-rw'},
- {name:'Crashout Crew',file:'crashout-crew.html',img:''},
+ {name:'Crashout Crew',file:'crashout-crew.html',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP599APaJX8VzVHdE0hVgYVd-umyrUtLjDYWxGEwcenjAAWBr3Bb-xrug&s=10'},
  {name:'People Playground',file:'people-playground.html',img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1118200/capsule_616x353.jpg?t=1776802758'},
- {name:'Skate 3',file:'skate-3.html',img:'https://media.contentapi.ea.com/content/dam/gin/images/2017/01/skate-3-key-art.jpg.adapt.crop191x100.628p.jpg'},
- {name:'Gamble With Your Friends',file:'gamble-with-your-friends.html',img:'https://sm.ign.com/ign_za/news/g/gamble-wit/gamble-with-your-friends-dev-celebrates-1-million-sales-says_keek.jpg'},
 ];
 window.BW_GAMES=games;
 
@@ -82,14 +82,34 @@ function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;',
 function gameUrl(file){return 'play/'+file.replace(/\.html?$/,'')+'.html'}
 function randomGame(){return games[Math.floor(Math.random()*games.length)]}
 function navigateGame(file){location.href=gameUrl(file)}
+function localDayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function readTodayPlays(){try{return JSON.parse(localStorage.getItem('bwx-game-plays-'+localDayKey())||'{}')}catch{return {}}}
+function getPopularGameToday(){
+  const counts=readTodayPlays();
+  const played=games.filter(g=>(Number(counts[g.file])||0)>0).sort((a,b)=>(Number(counts[b.file])||0)-(Number(counts[a.file])||0));
+  // Skate 3 is the initial featured choice until this browser has recorded today's plays.
+  return played[0]||games.find(g=>g.file==='skate-3.html')||games[0];
+}
+function recordCurrentGamePlay(){
+  const match=location.pathname.match(/\/play\/([^/]+\.html?)$/i); if(!match)return;
+  const file=decodeURIComponent(match[1]);
+  if(!games.some(g=>g.file.toLowerCase()===file.toLowerCase()))return;
+  try{const key='bwx-game-plays-'+localDayKey(),counts=JSON.parse(localStorage.getItem(key)||'{}');counts[file]=(Number(counts[file])||0)+1;localStorage.setItem(key,JSON.stringify(counts));}catch{}
+}
 function renderGames(list,target){
   if(!target)return;
   const randomCard={name:'Random',random:true,img:base+'assets/brainworks-logo.png'};
-  const shown=[randomCard,...list];
+  const popularGame=getPopularGameToday();
+  const popularCard={...popularGame,popular:true};
+  const shown=[randomCard,popularCard,...list.filter(g=>g.file!==popularCard.file)];
   target.innerHTML=shown.map((g,i)=>{
     const initials=g.name.split(/\s+/).map(x=>x[0]).join('').slice(0,3).toUpperCase();
     const href=g.random?'#random':gameUrl(g.file);
-    return `<article class="game-card ${g.random?'random-card':''}" style="animation-delay:${i*35}ms" data-random="${g.random?'1':'0'}"><a href="${href}" class="game-thumb-link" aria-label="${g.random?'Choose a random game':'Play '+esc(g.name)}"><div class="game-thumb">${g.img?`<img class="game-thumb-img" src="${esc(g.img)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="thumb-fallback">${esc(initials)}</div>`:`<div class="thumb-initials">${esc(initials)}</div>`}<div class="thumb-shine"></div></div></a><div class="game-body"><div class="game-name">${esc(g.name)}</div><a class="play-btn" href="${href}">${g.random?'Random':'Play'}</a></div></article>`;
+    const cardClass=[g.random?'random-card':'',g.popular?'popular-card':''].filter(Boolean).join(' ');
+    const marker=g.random?'<div class="random-mark">R</div>':g.popular?'<div class="popular-mark"><span aria-hidden="true">🔥</span> Popular</div>':'';
+    const playLabel=g.random?'Random':g.popular?'Play Popular':'Play';
+    const ariaLabel=g.random?'Choose a random game':g.popular?'Play today’s popular game: '+esc(g.name):'Play '+esc(g.name);
+    return `<article class="game-card ${cardClass}" style="animation-delay:${i*35}ms" data-random="${g.random?'1':'0'}"><a href="${href}" class="game-thumb-link" aria-label="${ariaLabel}"><div class="game-thumb">${g.img?`<img class="game-thumb-img" src="${esc(g.img)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="thumb-fallback">${esc(initials)}</div>`:`<div class="thumb-initials">${esc(initials)}</div>`}${marker}<div class="thumb-shine"></div></div></a><div class="game-body"><div class="game-name">${esc(g.name)}</div><a class="play-btn" href="${href}">${playLabel}</a></div></article>`;
   }).join('');
   bindCardEffects(target);
 }
@@ -118,7 +138,7 @@ function bindCardEffects(target){
 function setupGames(){
   const grid=document.getElementById('gameGrid'),empty=document.getElementById('emptyState'),input=document.getElementById('searchInput');
   if(!grid)return;
-  bindCardEffects(grid);
+  renderGames(games,grid);
   const bindRandom=()=>grid.querySelectorAll('.random-card a').forEach(a=>{if(a.dataset.randomBound==='1')return;a.dataset.randomBound='1';a.addEventListener('click',e=>{e.preventDefault();const g=randomGame();navigateGame(g.file);});});
   bindRandom();
   if(input)input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();const filtered=games.filter(g=>g.name.toLowerCase().includes(q));if(!q){location.reload();return;}renderGames(filtered,grid);bindRandom();if(empty)empty.hidden=filtered.length>0});
@@ -156,37 +176,27 @@ function setupSettings(){
 }
 
 function setupLiveStats(){
-  // Remove the previous badge-counter service worker and its cache, if a visitor has it installed.
-  try{
-    if('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(regs=>regs.filter(reg=>reg.active&&reg.active.scriptURL.endsWith('/daily-visits-sw.js')).forEach(reg=>reg.unregister())).catch(()=>{});
-    if('caches' in window) caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('bwx-daily-counter-')).map(key=>caches.delete(key)))).catch(()=>{});
-  }catch(e){}
-  const endpoint=(window.BRAINWORX_STATS_ENDPOINT||'').trim();
-  const activeEl=document.getElementById('bwActiveUsers'), dailyEl=document.getElementById('bwDailyVisitors'), statusEl=document.getElementById('bwStatsStatus');
-  if(!endpoint){ if(statusEl) statusEl.textContent='SETUP NEEDED'; return; }
-  let clientId;
-  try {
-    clientId=localStorage.getItem('bwx-visitor-id');
-    if(!clientId){ clientId=(crypto.randomUUID?crypto.randomUUID():('bwx-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2))); localStorage.setItem('bwx-visitor-id',clientId); }
-  } catch(e) { clientId='bwx-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2); }
-  let busy=false;
-  const pulse=async()=>{
-    if(busy || document.visibilityState==='prerender') return;
-    busy=true;
-    try{
-      const response=await fetch(endpoint,{method:'POST',mode:'cors',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify({clientId}),keepalive:true});
-      if(!response.ok) throw new Error('Stats request failed');
-      const data=await response.json();
-      if(activeEl) activeEl.textContent=String(Number.isFinite(data.activeUsers)?data.activeUsers:'—');
-      if(dailyEl) dailyEl.textContent=String(Number.isFinite(data.dailyVisitors)?data.dailyVisitors:'—');
-      if(statusEl) statusEl.textContent='LIVE';
-    }catch(e){ if(statusEl) statusEl.textContent='RECONNECTING'; }
-    finally{busy=false;}
+  const activeEl=document.getElementById('bwActiveUsers');
+  const dailyEl=document.getElementById('bwDailyVisitors');
+  const statusEl=document.getElementById('bwStatsStatus');
+  const activeKey='bwx-local-active-tabs';
+  let tabId;
+  try{tabId=sessionStorage.getItem('bwx-tab-id');if(!tabId){tabId=(crypto.randomUUID?crypto.randomUUID():('tab-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)));sessionStorage.setItem('bwx-tab-id',tabId);}}catch{tabId='tab-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);}
+  const getActive=()=>{let tabs={};try{tabs=JSON.parse(localStorage.getItem(activeKey)||'{}')}catch{};const now=Date.now();for(const [id,expires] of Object.entries(tabs)){if(!Number.isFinite(expires)||expires<now)delete tabs[id]}tabs[tabId]=now+30000;try{localStorage.setItem(activeKey,JSON.stringify(tabs))}catch{};return Object.keys(tabs).length};
+  const update=()=>{
+    const active=getActive();
+    const counts=readTodayPlays();
+    const plays=Object.values(counts).reduce((sum,n)=>sum+(Number.isFinite(Number(n))?Number(n):0),0);
+    if(activeEl)activeEl.textContent=String(active);
+    if(dailyEl)dailyEl.textContent=String(plays);
+    if(statusEl)statusEl.textContent='ON THIS DEVICE';
   };
-  pulse();
-  const timer=setInterval(pulse,45000);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')pulse();});
-  addEventListener('pagehide',()=>clearInterval(timer),{once:true});
+  recordCurrentGamePlay();
+  update();
+  const timer=setInterval(update,10000);
+  addEventListener('storage',update);
+  addEventListener('pagehide',()=>{try{const tabs=JSON.parse(localStorage.getItem(activeKey)||'{}');delete tabs[tabId];localStorage.setItem(activeKey,JSON.stringify(tabs));}catch{} });
+  addEventListener('pageshow',update);
 }
 
 function setupBrowserNav(){

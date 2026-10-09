@@ -177,3 +177,13 @@ body{transition:background-color .35s ease,color .35s ease}
 .stats-divider{height:48px;background:linear-gradient(180deg,transparent,rgba(255,105,180,.42),transparent)}
 @keyframes statsBlink{0%,100%{opacity:1}50%{opacity:.4}}
 @media(max-width:600px){.daily-visits-card{padding:14px 15px}.stats-metrics{gap:12px}.stats-metric small{font-size:9px}.stats-heading{font-size:9px}}
+
+
+/* Featured Popular card beside Random. Popularity is calculated from plays recorded in this browser profile today. */
+.popular-card .game-thumb{background:radial-gradient(circle at 45% 30%,rgba(255,123,45,.25),var(--theme-surface-2) 68%)}
+.popular-card{border-color:rgba(255,130,57,.42)!important}
+.popular-card:hover{box-shadow:0 20px 50px rgba(0,0,0,.38),0 0 28px rgba(255,106,35,.18)!important}
+.popular-mark{position:absolute;top:14px;left:14px;z-index:4;display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid rgba(255,194,104,.32);border-radius:999px;background:linear-gradient(135deg,rgba(90,32,12,.94),rgba(34,18,16,.92));color:#ffd4a2;font-size:11px;font-weight:900;letter-spacing:.02em;box-shadow:0 6px 18px rgba(0,0,0,.24)}
+.popular-mark span{font-size:14px;line-height:1}
+.popular-card .play-btn{background:linear-gradient(135deg,#ff8a42,#f04f75)!important;color:#fff!important}
+.daily-visits-card .stats-heading>span:first-child{letter-spacing:.16em}
