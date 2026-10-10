@@ -29,13 +29,14 @@
       <span>⌕</span><input id="homeInput" type="search" placeholder="Search g@m3s..." autocomplete="off"><kbd>/</kbd>
     </form>
     <div id="searchResults" class="quick-results" hidden></div>
-    <section class="daily-visits-card" aria-label="Local site statistics">
-      <div class="stats-heading"><span>YOUR SITE STATS</span><span class="stats-live"><i></i><span id="bwStatsStatus">ON THIS DEVICE</span></span></div>
-      <div class="stats-metrics">
-        <div class="stats-metric"><span class="stats-label">ACTIVE TABS</span><strong id="bwActiveUsers">1</strong><small>open tabs on this browser</small></div>
-        <div class="stats-divider" aria-hidden="true"></div>
-        <div class="stats-metric"><span class="stats-label">GAMES PLAYED TODAY</span><strong id="bwDailyVisitors">0</strong><small>on this browser profile</small></div>
+    <section class="daily-visits-card" aria-label="Global site statistics">
+      <div class="stats-heading"><span>GLOBAL SITE STATS</span><span class="stats-live"><i></i><span id="bwStatsStatus">CONNECTING</span></span></div>
+      <div class="stats-metrics stats-metrics-three">
+        <div class="stats-metric"><span class="stats-label">USING IT NOW</span><strong id="bwCurrentUsers">—</strong><small>active visitors worldwide</small></div>
+        <div class="stats-metric"><span class="stats-label">PEAK TODAY</span><strong id="bwPeakUsers">—</strong><small>most active at once today</small></div>
+        <div class="stats-metric"><span class="stats-label">TOTAL TODAY</span><strong id="bwDailyVisitors">—</strong><small>unique browsers today</small></div>
       </div>
+      <div id="bwStatsDate" class="stats-date">All totals use the same UK calendar day.</div><div class="stats-attribution">Shared global counters by <a href="https://counterapi.com/" target="_blank" rel="noopener">CounterAPI</a></div>
     </section>
     <div class="home-links"><a href="classes.html">Browse all g@m3s →</a></div>
   </section>

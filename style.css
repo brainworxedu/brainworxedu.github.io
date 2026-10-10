@@ -187,3 +187,13 @@ body{transition:background-color .35s ease,color .35s ease}
 .popular-mark span{font-size:14px;line-height:1}
 .popular-card .play-btn{background:linear-gradient(135deg,#ff8a42,#f04f75)!important;color:#fff!important}
 .daily-visits-card .stats-heading>span:first-child{letter-spacing:.16em}
+
+/* Three global statistics measured against the same UK calendar day. */
+.stats-metrics-three{grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,2.3vw,24px)}
+.stats-metrics-three .stats-metric{align-items:flex-start}
+.stats-metrics-three .stats-label{font-size:clamp(8px,1vw,10px);letter-spacing:.1em}
+.stats-date{margin-top:13px;color:var(--theme-dim,#9ca3af);font-size:10px;text-align:center;letter-spacing:.025em}
+.popular-mark{max-width:calc(100% - 18px);white-space:nowrap;font-size:11px}
+@media(max-width:540px){.stats-metrics-three{gap:8px}.stats-metrics-three .stats-label{letter-spacing:.04em;font-size:8px}.stats-metrics-three .stats-metric small{font-size:9px}.stats-date{font-size:9px}}
+
+.stats-attribution{margin-top:5px;text-align:center;font-size:9px;color:var(--theme-dim,#8e96a3);opacity:.72}.stats-attribution a{color:inherit;text-decoration:underline;text-underline-offset:2px}.stats-attribution a:hover{opacity:1;color:var(--theme-accent,#ff69b4)}
