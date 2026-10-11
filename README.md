@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-games added like skate
-=======
 # BrainWorks
 
 ## Website deploy
@@ -25,4 +22,11 @@ All day-specific keys use `Europe/London` and switch at UK midnight. The shared 
 ## AdSense and settings
 
 The AdSense Auto Ads code and `ads.txt` remain included. Settings still allows visitors to customize the tab title and icon.
->>>>>>> dc29880 (Add colour themes and falling background)
+
+## CS Surf and Black Ops 1 Zombies (new)
+
+- **CS Surf** is listed under `play/cs-surf.html`. The source HTML, game bundle and stylesheet from your upload are packaged under `games/` and `games/surf_files/`. Some missing bundled imports and online resources are loaded from surfd.net; the page includes an “Open directly” alternative if remote dependencies fail.
+- **BO1 Zombies** is listed under `play/bo1-zombies.html`. It uses the supplied map-select artwork and opens maps from the original hosted game at vel.gg/bo1z. The provided upload did not contain map engine binaries, so maps are embedded from their host with an “Open directly” option if their embedding policy blocks the iframe.
+- Both entries appear in the site-wide search and game catalogue, and participate in the existing daily Popular tracking.
+- This ZIP is uploaded as-is to GitHub Pages: no additional Cloudflare/Netlify backend or Discord webhook was added.
+- The remote game servers must remain online; offline play or independently hosting the entire engines is not supported by the supplied files.

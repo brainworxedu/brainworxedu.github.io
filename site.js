@@ -3,6 +3,8 @@ const base = location.pathname.includes('/play/') ? '../' : '';
 const games=[
  {name:'Skate 3',file:'skate-3.html',img:'https://media.contentapi.ea.com/content/dam/gin/images/2017/01/skate-3-key-art.jpg.adapt.crop191x100.628p.jpg'},
  {name:'Gamble With Your Friends',file:'gamble-with-your-friends.html',img:'https://sm.ign.com/ign_za/news/g/gamble-wit/gamble-with-your-friends-dev-celebrates-1-million-sales-says_keek.jpg'},
+ {name:'CS Surf',file:'cs-surf.html',img:'https://cdn.mos.cms.futurecdn.net/ZPwx6tmYKQtnPZDRCAfXMj.jpg'},
+ {name:'Black Ops 1 Zombies',file:'bo1-zombies.html',img:'https://i.redd.it/diyp8ti98lu91.jpg'},
  {name:'BuildNow GG',file:'buildnow-gg.html',img:'https://imgs.crazygames.com/buildnow-gg_16x9/20251229084241/buildnow-gg_16x9-cover?metadata=none&quality=60&height=7226'},
  {name:'Russian Counter Strike',file:'russian-counter-strike.html',img:'https://images.steamusercontent.com/ugc/1653347126887101751/B4E5D88FEEB55C93C37F812B731FF49CF1AAECE0/?imw=1024&imh=768&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true'},
  {name:'Granny',file:'granny.html',img:'https://tr.rbxcdn.com/180DAY-3216b6e023856a9b6e35a0d5a0021888/768/432/Image/Webp/noFilter'},
